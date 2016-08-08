@@ -10,7 +10,7 @@
 
 @interface ChessView : UIView
 
-/** 文字 */
-@property (nonatomic, strong) NSString *text;
+/** 等级 */
+@property (nonatomic, assign) NSInteger level;
 
 @end

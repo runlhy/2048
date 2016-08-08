@@ -10,10 +10,10 @@
 
 @interface OneGame : NSObject
 
-/** 棋盘的棋子 */
+/** 棋子数据 */
 @property (nonatomic, strong) NSMutableArray *chessboardArray;
 
-/** 规模 */
+/** 规模 scale * scale */
 @property (nonatomic, assign) NSInteger scale;
 
 @end

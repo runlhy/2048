@@ -19,7 +19,7 @@
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9k0-8D-i6m">
                     <rect key="frame" x="10" y="10" width="580" height="580"/>
-                    <color key="backgroundColor" red="1" green="1" blue="0.0" alpha="0.48999999999999999" colorSpace="calibratedRGB"/>
+                    <color key="backgroundColor" red="0.74117647058823533" green="0.67843137254901964" blue="0.62745098039215685" alpha="1" colorSpace="calibratedRGB"/>
                     <constraints>
                         <constraint firstAttribute="width" secondItem="9k0-8D-i6m" secondAttribute="height" id="gmm-td-zQ3"/>
                     </constraints>

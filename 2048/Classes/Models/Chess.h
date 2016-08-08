@@ -19,8 +19,6 @@
 
 /** 升级 */
 @property (nonatomic, assign) BOOL isUpgrade;
-/** 临时 */
-//@property (nonatomic, assign) BOOL isTemp;
 
 /** view */
 @property (nonatomic, strong) ChessView *view;

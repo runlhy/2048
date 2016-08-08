@@ -14,7 +14,6 @@
 		622EB77D1D55DF17000637E7 /* OneGame.m in Sources */ = {isa = PBXBuildFile; fileRef = 622EB77C1D55DF17000637E7 /* OneGame.m */; };
 		622EB7801D565023000637E7 /* ChessView.m in Sources */ = {isa = PBXBuildFile; fileRef = 622EB77F1D565023000637E7 /* ChessView.m */; };
 		6279D73E1D54FEB400F00838 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6279D73D1D54FEB400F00838 /* main.m */; };
-		6279D7441D54FEB400F00838 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6279D7431D54FEB400F00838 /* ViewController.m */; };
 		6279D7471D54FEB400F00838 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6279D7451D54FEB400F00838 /* Main.storyboard */; };
 		6279D7491D54FEB400F00838 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6279D7481D54FEB400F00838 /* Assets.xcassets */; };
 		6279D74C1D54FEB400F00838 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6279D74A1D54FEB400F00838 /* LaunchScreen.storyboard */; };
@@ -34,8 +33,6 @@
 		622EB77F1D565023000637E7 /* ChessView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChessView.m; sourceTree = "<group>"; };
 		6279D7391D54FEB400F00838 /* 2048.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = 2048.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6279D73D1D54FEB400F00838 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		6279D7421D54FEB400F00838 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		6279D7431D54FEB400F00838 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		6279D7461D54FEB400F00838 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		6279D7481D54FEB400F00838 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		6279D74B1D54FEB400F00838 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -195,8 +192,6 @@
 			isa = PBXGroup;
 			children = (
 				622EB75F1D55DA61000637E7 /* Classes */,
-				6279D7421D54FEB400F00838 /* ViewController.h */,
-				6279D7431D54FEB400F00838 /* ViewController.m */,
 				6279D7451D54FEB400F00838 /* Main.storyboard */,
 				6279D7481D54FEB400F00838 /* Assets.xcassets */,
 				6279D74A1D54FEB400F00838 /* LaunchScreen.storyboard */,
@@ -287,7 +282,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				622EB76F1D55DA61000637E7 /* AppDelegate.m in Sources */,
-				6279D7441D54FEB400F00838 /* ViewController.m in Sources */,
 				622EB7801D565023000637E7 /* ChessView.m in Sources */,
 				622EB7771D55DB23000637E7 /* Chess.m in Sources */,
 				622EB77D1D55DF17000637E7 /* OneGame.m in Sources */,

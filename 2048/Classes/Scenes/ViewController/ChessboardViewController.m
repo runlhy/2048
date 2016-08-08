@@ -10,6 +10,7 @@
 #import "ChessView.h"
 #import "OneGame.h"
 #import "Chess.h"
+#define RGB(r, g, b) [UIColor colorWithRed:r/255.0 green:g/255.0 blue:b/255.0 alpha:1.0]
 
 @interface ChessboardViewController (){
     CGFloat _chessWidth;
@@ -25,8 +26,6 @@
 - (void)viewDidLoad{
     [super viewDidLoad];
     
-    
-    
 }
 
 - (void)viewDidAppear:(BOOL)animated{
@@ -38,10 +37,8 @@
 
 - (void)initOnegame{
     OneGame *onegame = [OneGame new];
-    _evolutionArray = @[@"2", @"4", @"8", @"16", @"32", @"64", @"128", @"256", @"512", @"1024", @"2048"];
+    onegame.scale = 4;
     
-    
-    onegame.scale = 3;
     onegame.chessboardArray = [NSMutableArray arrayWithCapacity:onegame.scale * onegame.scale];
     for (NSInteger i=0; i<onegame.scale; i++) {
         for (NSInteger j=0; j<onegame.scale; j++) {
@@ -69,28 +66,40 @@
     //填充棋子
     onegame.chessboardArray[y1*onegame.scale+x1] = chess1;
     onegame.chessboardArray[y2*onegame.scale+x2] = chess2;
-    NSLog(@"(%ld,%ld), (%ld,%ld)%@",x1+1,y1+1,x2+1,y2+1,onegame.chessboardArray);
+    //NSLog(@"(%ld,%ld), (%ld,%ld)%@",x1+1,y1+1,x2+1,y2+1,onegame.chessboardArray);
     
     self.oneGame = onegame;
     CGFloat width = self.chessboardView.bounds.size.width;
     _chessWidth = width/onegame.scale;
     
     NSInteger scale = onegame.scale;
-    
     for (NSInteger i=0; i<scale; i++) {
         for (NSInteger j=0; j<scale; j++) {
+            UIView *backgorudView = [[UIView alloc]initWithFrame:CGRectMake(j * _chessWidth + 2, i *_chessWidth +2, _chessWidth - 4, _chessWidth - 4)];
+            backgorudView.layer.cornerRadius = (_chessWidth-4)/10;
+            backgorudView.backgroundColor = RGB(204, 192, 179);
+            [self.chessboardView addSubview:backgorudView];
+            
             if (![onegame.chessboardArray[i*scale+j] isKindOfClass:[NSNumber class]]) {
                 Chess *chess = onegame.chessboardArray[i*scale+j];
-                ChessView *view = [[ChessView alloc] initWithFrame:CGRectMake(chess.x * _chessWidth, chess.y * _chessWidth, _chessWidth, _chessWidth)];
+                ChessView *view = [[ChessView alloc] initWithFrame:CGRectMake(chess.x * _chessWidth + 2, chess.y * _chessWidth + 2, _chessWidth-4, _chessWidth-4)];
+                view.transform = CGAffineTransformMakeScale(0, 0);
+                [UIView animateWithDuration:.2 animations:^{
+                    view.transform = CGAffineTransformMakeScale(1, 1);
+                } completion:^(BOOL finished) {
+                    view.level = chess.level;
+                }];
                 chess.view = view;
-                view.backgroundColor = [UIColor grayColor];
-                view.text = _evolutionArray[chess.level];
                 [self.chessboardView addSubview:view];
             }
+            
         }
     }
 }
 
+/**
+ 添加手势
+ */
 - (void)addAllGesture{
     UISwipeGestureRecognizer *recognizer;
     recognizer = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(handleSwipeFrom:)];
@@ -109,11 +118,11 @@
     [recognizer setDirection:(UISwipeGestureRecognizerDirectionDown)];
     [self.chessboardView addGestureRecognizer:recognizer];
 }
-
+/**
+ 手势Action
+ */
 - (void)handleSwipeFrom:(UISwipeGestureRecognizer *)recognizer{
 
-    
-    
     Chess *tempChess = nil;
     
     NSInteger scale = self.oneGame.scale;
@@ -235,105 +244,111 @@
             break;
     }
     
-    //更新棋盘动画以及数据
-    BOOL isFirstUpdate = NO;
-    __block BOOL blockIsFirstUpdate = isFirstUpdate;
+    [self updateData];
+    
+    NSArray *animateArray = [NSArray arrayWithArray:self.oneGame.chessboardArray];
     for (NSInteger i=0; i<scale; i++) {
         for (NSInteger j=0; j<scale; j++) {
-            if (![self.oneGame.chessboardArray[i*scale+j] isKindOfClass:[NSNumber class]]) {
-                Chess *chess = self.oneGame.chessboardArray[i*scale+j];
+            if (![animateArray[i*scale+j] isKindOfClass:[NSNumber class]]) {
+                Chess *chess = animateArray[i*scale+j];
                 
-                [UIView animateWithDuration:.1 animations:^{
-                    
-                    chess.view.frame = CGRectMake(chess.x * _chessWidth, chess.y * _chessWidth, _chessWidth, _chessWidth);
-                    chess.view.text = _evolutionArray[chess.level];
-                    
-                } completion:^(BOOL finished) {
-                    if (blockIsFirstUpdate) {
-                        //保证只执行一次
-                        return ;
-                    }
-                    blockIsFirstUpdate = YES;
-                    
-                    //NSLog(@"%@",self.oneGame.chessboardArray);
-                    NSInteger scale = self.oneGame.scale;
-                    NSMutableArray *tempArray = [NSMutableArray arrayWithCapacity:scale * scale];
-                    for (NSInteger i=0; i<scale; i++) {
-                        for (NSInteger j=0; j<scale; j++) {
-                            tempArray[i*scale+j] = @0;
-                        }
-                    }
-                    
-                    for (NSInteger i=0; i<scale; i++) {
-                        for (NSInteger j=0; j<scale; j++) {
-                            if (![self.oneGame.chessboardArray[i*scale+j] isKindOfClass:[NSNumber class]]) {
-                                Chess *chess = self.oneGame.chessboardArray[i*scale+j];
-                                
-                                if (![tempArray[chess.y*scale+chess.x] isKindOfClass:[NSNumber class]]) {
-                                    Chess *removeChess = tempArray[chess.y*scale+chess.x];
-                                    [removeChess.view removeFromSuperview];
-                                    removeChess = nil;
-                                    
-                                    [UIView animateWithDuration:.1 animations:^{
-                                        chess.view.transform = CGAffineTransformMakeScale(1.2, 1.2);
-                                        chess.view.text = _evolutionArray[chess.level];
-                                    } completion:^(BOOL finished) {
-                                        [UIView animateWithDuration:.1 animations:^{
-                                            chess.view.transform = CGAffineTransformIdentity;
-                                        }];
-                                        
-                                    }];
-                                    
-                                    
-                                    
-                                }
-                                tempArray[chess.y*scale+chess.x] = chess;
-                            }
-                        }
-                    }
-                    
-                    if ([self.oneGame.chessboardArray isEqualToArray:tempArray]) {
-                        NSLog(@"相等");
-                    }else{
-                        
-                        self.oneGame.chessboardArray = tempArray;
-                        
-                        NSMutableArray *empyArray = [NSMutableArray array];
-                        for (NSInteger i=0; i<scale; i++) {
-                            for (NSInteger j=0; j<scale; j++) {
-                                if ([self.oneGame.chessboardArray[i*scale+j] isKindOfClass:[NSNumber class]]){
-                                    Chess *chess = [Chess new];
-                                    chess.x = j;
-                                    chess.y = i;
-                                    [empyArray addObject:chess];
-                                }
-                            }
-                        }
-                        
-                        NSInteger index = arc4random() % empyArray.count;
-                        
-                        Chess *chess = empyArray[index];
-                        chess.level = 0;
-                        tempArray[chess.y*scale+chess.x] = chess;
-                        ChessView *view = [[ChessView alloc] initWithFrame:CGRectMake(chess.x * _chessWidth, chess.y * _chessWidth, _chessWidth, _chessWidth)];
-                        chess.view = view;
-                        view.backgroundColor = [UIColor grayColor];
-                        view.text = _evolutionArray[chess.level];
-                        
-                        [self.chessboardView addSubview:view];
-                        
-                        
-                        
-                    }
-                    
-                    
-                    NSLog(@"%@",self.oneGame.chessboardArray);
+                [UIView animateWithDuration:.2f animations:^{
+                    chess.view.frame = CGRectMake(chess.x * _chessWidth + 2, chess.y * _chessWidth + 2, _chessWidth-4, _chessWidth-4);
                 }];
             }
         }
     }
+    [self performSelector:@selector(updateChessboard) withObject:nil afterDelay:.1];
+}
+/**
+ 更新数据
+ */
+- (void)updateData{
     
+    NSInteger scale = self.oneGame.scale;
+    NSMutableArray *tempArray = [NSMutableArray arrayWithCapacity:scale * scale];
+    for (NSInteger i=0; i<scale; i++) {
+        for (NSInteger j=0; j<scale; j++) {
+            tempArray[i*scale+j] = @0;
+        }
+    }
+    for (NSInteger i=0; i<scale; i++) {
+        for (NSInteger j=0; j<scale; j++) {
+            if (![self.oneGame.chessboardArray[i*scale+j] isKindOfClass:[NSNumber class]]) {
+                Chess *chess = self.oneGame.chessboardArray[i*scale+j];
+                tempArray[chess.y*scale+chess.x] = chess;
+            }
+        }
+    }
     
+    if ([self.oneGame.chessboardArray isEqualToArray:tempArray]) {
+        NSLog(@"相等");
+    }else{
+        self.oneGame.chessboardArray = tempArray;
+        
+        NSMutableArray *empyArray = [NSMutableArray array];
+        for (NSInteger i=0; i<scale; i++) {
+            for (NSInteger j=0; j<scale; j++) {
+                if ([self.oneGame.chessboardArray[i*scale+j] isKindOfClass:[NSNumber class]]){
+                    Chess *chess = [Chess new];
+                    chess.x = j;
+                    chess.y = i;
+                    [empyArray addObject:chess];
+                }
+            }
+        }
+        
+        NSInteger index = arc4random() % empyArray.count;
+        Chess *chess = empyArray[index];
+        chess.level = 0;
+        tempArray[chess.y*scale+chess.x] = chess;
+        ChessView *view = [[ChessView alloc] initWithFrame:CGRectMake(chess.x * _chessWidth + 2, chess.y * _chessWidth + 2, _chessWidth-4, _chessWidth-4)];
+        chess.view = view;
+        view.transform = CGAffineTransformMakeScale(0, 0);
+        
+        [self.chessboardView addSubview:view];
+        [UIView animateWithDuration:.2 animations:^{
+            view.transform = CGAffineTransformMakeScale(1, 1);
+            view.level = chess.level;
+        }];
+    }
+}
+/**
+ 更新棋盘
+ */
+- (void)updateChessboard{
+    for(UIView *view in [self.chessboardView subviews]){
+        if ([view isKindOfClass:[ChessView class]]) {
+            [view removeFromSuperview];
+        }
+    }
+    NSInteger scale = self.oneGame.scale;
+    for (NSInteger i=0; i<scale; i++) {
+        for (NSInteger j=0; j<scale; j++) {
+            if (![self.oneGame.chessboardArray[i*scale+j] isKindOfClass:[NSNumber class]]) {
+                Chess *chess = self.oneGame.chessboardArray[i*scale+j];
+                ChessView *view = [[ChessView alloc] initWithFrame:CGRectMake(chess.x * _chessWidth + 2, chess.y * _chessWidth + 2, _chessWidth-4, _chessWidth-4)];
+                
+                view.level = chess.level;
+                
+                chess.view = view;
+                if (chess.isUpgrade) {
+                    chess.isUpgrade = NO;
+                    [UIView animateWithDuration:.1 animations:^{
+                        chess.view.transform = CGAffineTransformMakeScale(1.2, 1.2);
+                        chess.view.level = chess.level;
+                        
+                    } completion:^(BOOL finished) {
+                        [UIView animateWithDuration:.1 animations:^{
+                            chess.view.transform = CGAffineTransformIdentity;
+                        }];
+                    }];
+                }
+                
+                [self.chessboardView addSubview:view];
+            }
+        }
+    }
 }
 
 - (void)didReceiveMemoryWarning {
